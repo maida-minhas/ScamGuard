@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Report {{ entity.display_masked }} — ScamGuard{% endblock %}
+
+{% block content %}
+  <header class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="flex flex-wrap items-center gap-3">
+      <h1 class="text-2xl font-bold text-slate-900">Report {{ entity.display_masked }}</h1>
+      <span class="rounded bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">{{ entity.type.value|title }}</span>
+    </div>
+    <p class="mt-2 text-sm text-slate-600">
+      Your report goes public once you verify your email address. One report per account per entity.
+    </p>
+  </header>
+
+  <form method="post" class="mt-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    {% if error %}
+      <p class="mb-4 rounded border border-red-300 bg-red-50 px-4 py-2 text-sm text-red-700" role="alert">
+        {{ error }}
+      </p>
+    {% endif %}
+
+    <label for="category" class="block text-sm font-medium text-slate-700">What happened?</label>
+    <select
+      id="category"
+      name="category"
+      required
+      class="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none"
+    >
+      {% for cat in categories %}
+        <option value="{{ cat.value }}">{{ cat.value.replace('_', ' ')|title }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="description" class="mt-5 block text-sm font-medium text-slate-700">Describe it</label>
+    <textarea
+      id="description"
+      name="description"
+      rows="5"
+      maxlength="2000"
+      required
+      class="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none"
+      placeholder="What did they do? When did it happen?"
+    ></textarea>
+
+    <div class="mt-3 flex items-center gap-3">
+      <button
+        type="button"
+        id="suggest-category"
+        class="rounded border border-indigo-300 bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-100"
+      >
+        Suggest category
+      </button>
+      <span id="suggest-note" class="text-xs text-slate-500"></span>
+    </div>
+
+    <button
+      type="submit"
+      class="mt-5 rounded bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+    >
+      Submit report
+    </button>
+  </form>
+
+  <script>
+    document.getElementById("suggest-category").addEventListener("click", async () => {
+      const text = document.getElementById("description").value;
+      const note = document.getElementById("suggest-note");
+      note.textContent = "Analyzing…";
+      try {
+        const resp = await fetch("{{ url_for('reports.suggest') }}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text }),
+        });
+        if (!resp.ok) {
+          note.textContent = "";
+          return;
+        }
+        const data = await resp.json();
+        if (data.category) {
+          document.getElementById("category").value = data.category;
+          note.textContent = "Suggested: " + data.category.replaceAll("_", " ").toLowerCase() + ".";
+        } else {
+          note.textContent = "No confident suggestion — pick one manually.";
+        }
+      } catch (e) {
+        note.textContent = "";
+      }
+    });
+  </script>
+{% endblock %}

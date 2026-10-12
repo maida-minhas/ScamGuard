@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}ScamGuard — search{% endblock %}
+
+{% block content %}
+  <section class="py-12 text-center">
+    <h1 class="text-2xl font-bold text-slate-900">Search</h1>
+    <p class="mx-auto mt-3 max-w-xl text-slate-600">
+      Enter a phone number, Instagram handle, or Facebook link to check
+      what others experienced.
+    </p>
+    <form action="{{ url_for('entities.search') }}" method="get" class="mx-auto mt-6 flex max-w-xl gap-2">
+      <input
+        type="text"
+        name="q"
+        required
+        placeholder="03001234567, @shop.pk, facebook.com/marketplace/..."
+        class="w-full rounded border border-slate-300 px-4 py-2.5 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+      >
+      <button
+        type="submit"
+        class="rounded bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700"
+      >
+        Search
+      </button>
+    </form>
+  </section>
+{% endblock %}

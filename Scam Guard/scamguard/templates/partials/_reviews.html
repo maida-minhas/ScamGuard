@@ -1,0 +1,18 @@
+{% from "macros.html" import chip, stars %}
+
+<ul class="space-y-3">
+  {% for review in reviews %}
+    <li class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <div class="flex flex-wrap items-center gap-2">
+        {{ stars(review.rating) }}
+        {% set tone = review_tones[review.id] %}
+        {{ chip(tone|title, {'positive': 'green', 'negative': 'red'}.get(tone, 'slate')) }}
+        {% if review.proof_file_id %}
+          {{ chip('Verified with proof', 'indigo') }}
+        {% endif %}
+      </div>
+      <p class="mt-1 text-sm text-slate-600">{{ review.body }}</p>
+      <p class="mt-2 text-xs text-slate-400">{{ review.created_at.strftime('%Y-%m-%d') }}</p>
+    </li>
+  {% endfor %}
+</ul>

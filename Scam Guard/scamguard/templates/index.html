@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}ScamGuard — check before you pay{% endblock %}
+
+{% block content %}
+  <section class="py-12 text-center">
+    <h1 class="text-3xl font-bold text-slate-900">Check before you pay or answer</h1>
+    <p class="mx-auto mt-3 max-w-xl text-slate-600">
+      Search a phone number, Instagram shop, or Facebook seller to see what
+      others experienced — before money changes hands.
+    </p>
+    <p class="mt-4 text-sm text-slate-500">
+      {{ entity_count }} entities checked · {{ review_count }} reviews · {{ report_count }} reports
+    </p>
+    <form action="{{ url_for('entities.search') }}" method="get" class="mx-auto mt-6 flex max-w-xl gap-2">
+      <input
+        type="text"
+        name="q"
+        required
+        placeholder="03001234567, @shop.pk, facebook.com/marketplace/..."
+        class="w-full rounded border border-slate-300 px-4 py-2.5 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+      >
+      <button
+        type="submit"
+        class="rounded bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700"
+      >
+        Search
+      </button>
+    </form>
+  </section>
+
+  <section class="grid gap-4 md:grid-cols-3">
+    <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="font-semibold text-slate-900">Star reviews</h2>
+      <p class="mt-2 text-sm text-slate-600">
+        Rate a number or seller 1–5 stars and read other people's experiences.
+      </p>
+    </div>
+    <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="font-semibold text-slate-900">Scam reports</h2>
+      <p class="mt-2 text-sm text-slate-600">
+        Flag a phone number or page as a scam so others can avoid it.
+      </p>
+    </div>
+    <div class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="font-semibold text-slate-900">Proof-of-payment gate</h2>
+      <p class="mt-2 text-sm text-slate-600">
+        Business reviews only go public after the author uploads proof of payment.
+      </p>
+    </div>
+  </section>
+{% endblock %}

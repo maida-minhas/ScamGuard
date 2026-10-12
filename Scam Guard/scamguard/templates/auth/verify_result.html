@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Verify email — ScamGuard{% endblock %}
+
+{% block content %}
+  {% if success %}
+    <div class="mx-auto max-w-xl rounded-lg border border-green-200 bg-green-50 p-6">
+      <h1 class="text-xl font-bold text-green-900">Email verified</h1>
+      <p class="mt-2 text-sm text-green-800">
+        Your email is verified. Pending reviews and reports that qualify are
+        now published.
+      </p>
+      <a href="{{ url_for('index') }}"
+         class="mt-4 inline-block rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+        Back to home
+      </a>
+    </div>
+  {% else %}
+    <div class="mx-auto max-w-xl rounded-lg border border-amber-300 bg-amber-50 p-6">
+      <h1 class="text-xl font-bold text-amber-900">Verification failed</h1>
+      <p class="mt-2 text-sm text-amber-800">
+        The verification link could not be used — see the message above.
+      </p>
+      <a href="{{ url_for('auth.register') }}"
+         class="mt-4 inline-block rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+        Back to register
+      </a>
+    </div>
+  {% endif %}
+{% endblock %}

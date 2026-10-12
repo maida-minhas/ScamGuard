@@ -1,0 +1,37 @@
+{% macro chip(label, tone='slate') -%}
+  {%- set tones = {
+    'slate': 'border-slate-300 bg-slate-100 text-slate-600',
+    'amber': 'border-amber-300 bg-amber-100 text-amber-700',
+    'green': 'border-emerald-300 bg-emerald-100 text-emerald-700',
+    'red': 'border-red-300 bg-red-100 text-red-700',
+    'indigo': 'border-indigo-300 bg-indigo-100 text-indigo-700'
+  } -%}
+  <span class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-medium {{ tones.get(tone, tones.slate) }}">{{ label }}</span>
+{%- endmacro %}
+
+{% macro stars(rating) -%}
+  <span class="text-amber-500">{{ '★' * rating }}{{ '☆' * (5 - rating) }}</span>
+{%- endmacro %}
+
+{% macro review_status_chip(review) -%}
+  {% if review.status.value == 'published' %}
+    {{ chip('Published', 'green') }}
+    {% if review.proof_file_id %}
+      {{ chip('Verified with proof', 'indigo') }}
+    {% endif %}
+  {% elif review.entity.type.value == 'PHONE' %}
+    {{ chip('Awaiting email verification', 'amber') }}
+  {% elif not review.proof_file_id %}
+    {{ chip('Missing proof', 'amber') }}
+  {% else %}
+    {{ chip('Awaiting email verification', 'amber') }}
+  {% endif %}
+{%- endmacro %}
+
+{% macro report_status_chip(report) -%}
+  {% if report.status.value == 'published' %}
+    {{ chip('Published', 'green') }}
+  {% else %}
+    {{ chip('Awaiting email verification', 'amber') }}
+  {% endif %}
+{%- endmacro %}

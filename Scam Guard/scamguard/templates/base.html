@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ScamGuard{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+  <nav class="bg-white border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="{{ url_for('index') }}" class="text-lg font-bold text-indigo-600">ScamGuard</a>
+      <div class="flex items-center gap-4 text-sm">
+        <form method="get" action="{{ url_for('entities.search') }}" class="flex items-center gap-1.5">
+          <input
+            type="search"
+            name="q"
+            aria-label="Search"
+            placeholder="Search…"
+            class="w-36 rounded border border-slate-300 px-2 py-1 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          >
+          <button type="submit" class="text-slate-600 hover:text-indigo-600">Search</button>
+        </form>
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('auth.my_activity') }}" class="text-slate-600 hover:text-indigo-600">My Activity</a>
+          <form method="post" action="{{ url_for('auth.logout') }}">
+            <button type="submit" class="text-slate-600 hover:text-indigo-600">Logout</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="text-slate-600 hover:text-indigo-600">Login</a>
+          <a href="{{ url_for('auth.register') }}" class="rounded bg-indigo-600 px-3 py-1.5 text-white hover:bg-indigo-700">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="max-w-5xl mx-auto px-4 mt-4 w-full">
+        {% for message in messages %}
+          <div class="rounded border border-amber-300 bg-amber-50 px-4 py-2 text-amber-800">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="max-w-5xl mx-auto px-4 py-8 w-full flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white">
+    <div class="max-w-5xl mx-auto px-4 py-4 text-sm text-slate-500">
+      Student prototype — demo data, no real guarantees.
+    </div>
+  </footer>
+</body>
+</html>
